@@ -1,0 +1,4 @@
+﻿- Możliwość edycji apikey (przy uruchomieniu) oraz uid (w dowolnym momencie) z poziomu aplikacji
+	+ Po tym kroku, należy przeprowadzić sprawdzenie działania aplikacji bez XML oraz pod kątem generowania/nadpisywania istniejącego
+- Popracować nad layoutem (może więcej informacji o userze obok foto, by wypełnić lukę?)
+- Możliwość ustawiania lokalizacji pliku XML (not important)
