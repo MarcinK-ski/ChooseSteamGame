@@ -26,47 +26,42 @@ namespace playSteam
             this._apiKey = !string.IsNullOrEmpty(apiKey) ? apiKey : DEFAULT_API_KEY;
         }
 
-        /*
-         * Method to load XML
-         */
-        private XElement xRead(string url)
-        {
-            XElement xelement;
-            try
-            {
-                xelement = XElement.Load(url);
-                return xelement;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Wyjatek przy xRead (czytanie XML): " + ex.Message);
-                return null;
-            }
-        }
 
         /*
-         * Get basic user info
+         * Get XElement's array with user info
          */
-        public string getMyUserInfo(string uid = null)
+        private XElement getMyUserInfo(string uid = null)
         {
             if (uid == null || uid == "")
                 uid = this.UserID;
 
             string url = $"{API_URL}ISteamUser/GetPlayerSummaries/v0002/?key={this._apiKey}&steamids={uid}&format=xml";
-            XElement xelement = xRead(url);
+            XElement xelement = Helper.xRead(url);
             if (xelement == null)
                 return null;
 
             XElement[] usr = xelement.Elements("players")?.Elements("player")?.ToArray();
-            if (usr == null || usr.Length < 1)
+            if (usr.Length < 1)
+                return null;
+            
+
+            return usr[0];
+        }
+
+        /*
+         * Get basic user info as string
+         */
+        public string userInfoToString()
+        {
+            XElement usr = this.getMyUserInfo();
+            if (usr == null)
                 return null;
 
             StringBuilder userInfo = new StringBuilder();
-            
-            userInfo.AppendLine("\tNick: " + usr[0].Element("personaname")?.Value);
-            userInfo.AppendLine("\tReal name: " + usr[0].Element("realname")?.Value);
-            userInfo.AppendLine("\tCountry code: " + usr[0].Element("loccountrycode")?.Value);
 
+            userInfo.AppendLine("\tNick: " + usr.Element("personaname")?.Value);
+            userInfo.AppendLine("\tReal name: " + usr.Element("realname")?.Value);
+            userInfo.AppendLine("\tCountry code: " + usr.Element("loccountrycode")?.Value);
 
             return userInfo.ToString();
         }
@@ -77,7 +72,7 @@ namespace playSteam
         private List<string> getGames()
         {
             string url = $"{API_URL}IPlayerService/GetOwnedGames/v0001/?key={this._apiKey}&steamid={this.UserID}&format=xml&include_appinfo=1";
-            XElement xelement = xRead(url);
+            XElement xelement = Helper.xRead(url);
             if (xelement == null)
                 return null;
 
