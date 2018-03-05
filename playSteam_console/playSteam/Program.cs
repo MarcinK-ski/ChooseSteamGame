@@ -17,20 +17,18 @@ namespace playSteam
 
             XElement xSavedSettings = Helper.xRead(Helper.DEFAULT_LAST_SETTINGS_XML);
 
+            /* API KEY */
             lastApiKey = xSavedSettings.Element("api")?.Value;
+            Console.Write("Enter APIKey [if empty: " + lastApiKey + " ]: ");
+            string apiKey = Console.ReadLine();
+
+            /* UID */
             lastUid = xSavedSettings.Element("uid")?.Value;
+            Console.Write("Enter UserID [if empty: " + lastUid + " ]: ");
+            string uid = Console.ReadLine();
 
-            Console.Write("Enter APIKey: ");
-            string givenApiKey = Console.ReadLine();
-            string apiKey = givenApiKey == "" ? lastApiKey : givenApiKey;
-
-            Console.Write("Enter UserID: ");
-            string givenUid = Console.ReadLine();
-            string uid = givenUid == "" ? lastUid : givenUid;
-
-
-            /* Save to file used apiKey + userID */
-            if (!string.IsNullOrEmpty(givenApiKey))
+            /* Save to file used apiKey + userID -> only if not default*/
+            if (!string.IsNullOrEmpty(apiKey) || !string.IsNullOrEmpty(uid))
             {
                 Console.WriteLine("\n\nCzy chcesz zapisać podany apiKey oraz userID? [Y/N]");
                 char key = (char)Console.Read();
@@ -44,8 +42,13 @@ namespace playSteam
                     Console.WriteLine("UWAGA! Nie zapisano do pliku, przez wybór użytkownika!");
             }
 
-            Console.WriteLine("\n\n");
+            /* Set last apikey/uid, if not given */
+            apiKey = apiKey == "" ? lastApiKey : apiKey;
+            uid = uid == "" ? lastUid : uid;
+
+
             Steam game = new Steam(uid, apiKey);
+            Console.WriteLine("\n\n");
 
             /* Choosed steam user info */
             string userInfo = game.userInfoToString();
