@@ -13,7 +13,7 @@ namespace playSteam
 
         protected readonly string _apiKey;
         protected const string API_URL = "http://api.steampowered.com/";
-        protected string UserID { get; set; }
+        public string UserID { get; set; }
 
         public Steam() : this(DEFAULT_UID, DEFAULT_API_KEY)
         {

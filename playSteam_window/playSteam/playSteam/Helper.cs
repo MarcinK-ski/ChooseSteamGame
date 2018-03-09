@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Xml.Linq;
 
 namespace playSteam
@@ -26,6 +27,17 @@ namespace playSteam
         }
 
         /*
+         * Checking is file with settings exists
+         */
+        public static bool isSettFileEx(string url = DEFAULT_LAST_SETTINGS_XML)
+        {
+            if (File.Exists(url))
+                return true;
+
+            return false;
+        }
+
+        /*
          * save last UID and APIKey to XML
          */
         public static bool xSettingsSave(string uid, string apiKey, string url = DEFAULT_LAST_SETTINGS_XML)
@@ -33,6 +45,10 @@ namespace playSteam
             XElement settingsFile = new XElement("settings", 
                                                     new XElement("uid", uid), 
                                                     new XElement("api", apiKey));
+
+            if (isSettFileEx(url))
+                File.Replace(url, url + ".bak", url + ".bak2");     //2 backup kinds old and older
+
             settingsFile.Save(url);
             
             return false;
@@ -45,7 +61,7 @@ namespace playSteam
         {
             XElement xel = xRead(xmlUri);
 
-            return xel.Element(val)?.Value;
+            return xel?.Element(val)?.Value;
         }
     }
 }

@@ -20,13 +20,57 @@ namespace playSteam
     /// </summary>
     public partial class MainWindow : Window
     {
+        GiveParam param = new GiveParam();
+        SteamWpfUi steam;
+
         public MainWindow()
         {
+            param.ShowDialog();
+
             InitializeComponent();
 
-            SteamWpfUi steam = new SteamWpfUi(Helper.xReadSettingVal("uid"), Helper.xReadSettingVal("api"));
+            steam = new SteamWpfUi(Helper.xReadSettingVal("uid"), Helper.xReadSettingVal("api"));
+            loadData();
+        }
+
+        /*
+         * Load random game title and user data
+         */
+        private void loadData()
+        {
             steam.showUserInfo(nicklabel, namelabel, fromlabel, avatar);
             steam.showGameTitle(choosedGame);
+        }
+
+        /* Close hidden GiveParam window */
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            param.HideWindow = true;
+            param.Close();
+        }
+
+        private void settings_Click(object sender, RoutedEventArgs e)
+        {
+            param.fillParamsGaps();
+            param.ShowDialog();
+            steam.UserID = Helper.xReadSettingVal("uid");
+            loadData();
+        }
+
+        private void refresh_Click(object sender, RoutedEventArgs e)
+        {
+            loadData();
+        }
+
+        private void info_Click(object sender, RoutedEventArgs e)
+        {
+            string about = "This (unfinished for now) app was created for people like me, who has great steam library and " +
+                "they don't have idea, what game choose now. \n\n" +
+                "To use this app, you have to have Steam API Key! (link: http://steamcommunity.com/dev/apikey ) \n\n" +
+                "App creator: Marcin Kalinowski\n" +
+                "Gdansk A.D. 2018";
+
+            MessageBox.Show(about, "About app", MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
 }

@@ -2,11 +2,16 @@
 using System.Xml.Linq;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
+using System.Windows;
 
 namespace playSteam
 {
     class SteamWpfUi : Steam
     {
+        public SteamWpfUi() : base()    //Default key and apiKey
+        {
+        }
+
         public SteamWpfUi(string uid, string apiKey) : base(uid, apiKey)
         {
         }
@@ -15,6 +20,19 @@ namespace playSteam
         public void showUserInfo(Label nick, Label name, Label country, Image avatar)
         {
             XElement userInfo = this.getMyUserInfo();
+            if (userInfo == null)
+            {
+                if(Helper.isSettFileEx())
+                {
+                    MessageBoxResult error = MessageBox.Show("Problem with APIKey or UserID. Please check it.", "ERROR!", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+                else
+                {
+                    MessageBoxResult error = MessageBox.Show("There's no XML file! Creating emptyone...", "ERROR!", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Helper.xSettingsSave("", "");
+                }
+                return;
+            }
 
             nick.Content = userInfo.Element("personaname")?.Value;
             name.Content = $"(vel {userInfo.Element("realname")?.Value})";
@@ -25,7 +43,9 @@ namespace playSteam
         /* Show random game title */
         public void showGameTitle(Label game)
         {
-            game.Content = this.rollGames();
+            string choosedGame = this.rollGames();
+            if(choosedGame != null)
+                game.Content = choosedGame;
         }
     }
 }
