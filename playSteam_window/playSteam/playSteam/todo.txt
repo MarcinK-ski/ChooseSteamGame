@@ -1,4 +1,3 @@
 ﻿- Popracować nad layoutem (może więcej informacji o userze obok foto, by wypełnić lukę?)
 - Możliwość ustawiania lokalizacji pliku XML (not important)
 - To nie jest apka, gdzie async jest niezbędny, ale można o nim później pomysleć.
-- steam ID musi być pod postacią cyfrową. Zobaczyć czy można używać aliasów nadanych przez userów

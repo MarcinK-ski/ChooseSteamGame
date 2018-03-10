@@ -14,18 +14,38 @@ namespace playSteam
         protected readonly string _apiKey;
         protected const string API_URL = "http://api.steampowered.com/";
         public string UserID { get; set; }
+        protected string settingsUri;
 
         public Steam() : this(DEFAULT_UID, DEFAULT_API_KEY)
         {
         }
 
-        public Steam(string uid, string apiKey) 
+        public Steam(string uid, string apiKey, string settingsUri = Helper.DEFAULT_LAST_SETTINGS_XML) 
         {
             this.UserID = !string.IsNullOrEmpty(uid) ? uid : DEFAULT_UID;
 
             this._apiKey = !string.IsNullOrEmpty(apiKey) ? apiKey : DEFAULT_API_KEY;
+
+            this.settingsUri = settingsUri;
         }
 
+
+        public bool? generateUID(string customID)
+        {
+            if (customID == "")
+                return null;
+            string url = $"{API_URL}ISteamUser/ResolveVanityURL/v0001/?key={this._apiKey}&vanityurl={customID}&format=xml";
+            XElement xel = Helper.xRead(url);
+            if (xel == null)
+                return null;
+
+            if (xel.Element("success")?.Value != "1")
+                return false;
+
+            this.UserID = xel.Element("steamid").Value;
+            Helper.xSettingsSave(this.UserID, this._apiKey, this.settingsUri);
+            return true;
+        }
 
         /*
          * Get XElement's array with user info

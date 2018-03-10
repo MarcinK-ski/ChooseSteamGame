@@ -41,6 +41,13 @@ namespace playSteam
             EditableApiKey = true;
         }
         
+        public string getCustomID()
+        {
+            string customId = cidtextbox.Text;
+            cidtextbox.Text = "";
+            return customId;
+        }
+
         public void fillParamsGaps()
         {
             uidtextbox.Text = Helper.xReadSettingVal("uid");

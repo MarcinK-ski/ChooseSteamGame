@@ -35,7 +35,9 @@ namespace playSteam
             }
 
             nick.Content = userInfo.Element("personaname")?.Value;
-            name.Content = $"(vel {userInfo.Element("realname")?.Value})";
+            string realname = userInfo.Element("realname")?.Value;
+            if(realname != "" && realname != null)
+                name.Content = $"(vel {realname})";
             country.Content = userInfo.Element("loccountrycode")?.Value;
             avatar.Source = new BitmapImage(new Uri(userInfo.Element("avatarfull")?.Value));
         }

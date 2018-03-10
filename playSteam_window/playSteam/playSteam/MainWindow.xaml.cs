@@ -38,6 +38,10 @@ namespace playSteam
          */
         private void loadData()
         {
+            bool? isCustomID = steam.generateUID(param.getCustomID());
+            if (isCustomID == false)
+                MessageBox.Show("Given invalid User Custom ID, i'm using last UID.", "ERROR!", MessageBoxButton.OK, MessageBoxImage.Error);
+
             steam.showUserInfo(nicklabel, namelabel, fromlabel, avatar);
             steam.showGameTitle(choosedGame);
         }
