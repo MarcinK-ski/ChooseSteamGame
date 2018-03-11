@@ -29,7 +29,7 @@ namespace playSteam
         /*
          * Checking is file with settings exists
          */
-        public static bool isSettFileEx(string url = DEFAULT_LAST_SETTINGS_XML)
+        public static bool isFileEx(string url = DEFAULT_LAST_SETTINGS_XML)
         {
             if (File.Exists(url))
                 return true;
@@ -46,8 +46,6 @@ namespace playSteam
                                                     new XElement("uid", uid), 
                                                     new XElement("api", apiKey));
 
-            if (isSettFileEx(url))
-                File.Replace(url, url + ".bak", url + ".bak2");     //2 backup kinds old and older
 
             settingsFile.Save(url);
             

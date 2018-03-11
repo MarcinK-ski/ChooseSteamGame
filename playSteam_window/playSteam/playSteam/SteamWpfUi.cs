@@ -22,7 +22,7 @@ namespace playSteam
             XElement userInfo = this.getMyUserInfo();
             if (userInfo == null)
             {
-                if(Helper.isSettFileEx())
+                if(Helper.isFileEx())
                 {
                     MessageBoxResult error = MessageBox.Show("Problem with APIKey or UserID. Please check it.", "ERROR!", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
@@ -36,8 +36,10 @@ namespace playSteam
 
             nick.Content = userInfo.Element("personaname")?.Value;
             string realname = userInfo.Element("realname")?.Value;
-            if(realname != "" && realname != null)
+            if (realname != "" && realname != null)
                 name.Content = $"(vel {realname})";
+            else
+                name.Content = null;
             country.Content = userInfo.Element("loccountrycode")?.Value;
             avatar.Source = new BitmapImage(new Uri(userInfo.Element("avatarfull")?.Value));
         }
