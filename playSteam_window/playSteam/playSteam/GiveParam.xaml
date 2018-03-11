@@ -11,7 +11,7 @@
         <Label x:Name="uidlabel" Content="User ID:" HorizontalAlignment="Left" Margin="27,111,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="apikeytextbox" HorizontalAlignment="Left" Height="23" Margin="127,68,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="295" UndoLimit="5" IsEnabled="False"/>
         <TextBox x:Name="uidtextbox" HorizontalAlignment="Left" Height="23" Margin="127,111,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="295" UndoLimit="5"/>
-        <Button x:Name="saveparamsbutton" Content="Save" HorizontalAlignment="Left" Margin="140,206,0,0" VerticalAlignment="Top" Width="75" Click="saveparamsbutton_Click"/>
+        <Button x:Name="saveparamsbutton" Content="Save" HorizontalAlignment="Left" Margin="140,206,0,0" VerticalAlignment="Top" Width="75" Click="saveparamsbutton_Click" IsDefault="True"/>
         <Button x:Name="cancelparamsbutton" Content="Discard" HorizontalAlignment="Left" Margin="270,206,0,0" VerticalAlignment="Top" Width="75" Click="cancelparamsbutton_Click"/>
         <Label x:Name="cidlabel" Content="Custom ID:" HorizontalAlignment="Left" Margin="27,155,0,0" VerticalAlignment="Top"/>
         <TextBox x:Name="cidtextbox" HorizontalAlignment="Left" Height="23" Margin="127,155,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="295" UndoLimit="5"/>

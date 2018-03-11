@@ -35,12 +35,19 @@ namespace playSteam
             }
 
             nick.Content = userInfo.Element("personaname")?.Value;
+
             string realname = userInfo.Element("realname")?.Value;
             if (realname != "" && realname != null)
                 name.Content = $"(vel {realname})";
             else
                 name.Content = null;
-            country.Content = userInfo.Element("loccountrycode")?.Value;
+            
+            string countryCode = userInfo.Element("loccountrycode")?.Value;
+            if (countryCode != "" && countryCode != null)
+                country.Content = countryCode;
+            else
+                country.Content = "unknown";
+
             avatar.Source = new BitmapImage(new Uri(userInfo.Element("avatarfull")?.Value));
         }
 
@@ -48,8 +55,10 @@ namespace playSteam
         public void showGameTitle(Label game)
         {
             string choosedGame = this.rollGames();
-            if(choosedGame != null)
+            if (choosedGame != null)
                 game.Content = choosedGame;
+            else
+                game.Content = "There's no game in Yours library, you poor guy...";
         }
     }
 }

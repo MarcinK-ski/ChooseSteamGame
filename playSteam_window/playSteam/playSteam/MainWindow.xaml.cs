@@ -27,7 +27,7 @@ namespace playSteam
         {
             bool? isCustomID = steam.generateUID(param.getCustomID());
             if (isCustomID == false)
-                MessageBox.Show("Given invalid User Custom ID, i'm using last UID.", "ERROR!", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Given invalid User Custom ID, i'll use last UID.", "ERROR!", MessageBoxButton.OK, MessageBoxImage.Error);
 
             steam.showUserInfo(nicklabel, namelabel, fromlabel, avatar);
             steam.showGameTitle(choosedGame);
@@ -56,7 +56,7 @@ namespace playSteam
         private void info_Click(object sender, RoutedEventArgs e)
         {
             string about = "This (unfinished for now) app was created for people like me, who has great steam library and " +
-                "they don't have idea, what game choose now. \n\n" +
+                "they don't have idea, what game choose right now. \n\n" +
                 "To use this app, you have to have Steam API Key! (link: http://steamcommunity.com/dev/apikey ) \n\n" +
                 "App creator: Marcin Kalinowski\n" +
                 "Gdansk A.D. 2018";
