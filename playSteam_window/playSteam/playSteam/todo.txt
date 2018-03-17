@@ -1,3 +1,4 @@
 ﻿- Popracować nad layoutem (może więcej informacji o userze obok foto, by wypełnić lukę?)
 - Możliwość ustawiania lokalizacji pliku XML (not important)
 - To nie jest apka, gdzie async jest niezbędny, ale można o nim później pomysleć.
+- !MOŻLIWOSĆ PORÓWNANIA SWOICH BIBLIOTEK ZE ZNAJOMYM I WYBRANIU WSPÓLNEJ GRY, LUB WSPÓLNEJ GRY DZAŁAJACEJ NA MULTI (checkbox)!
