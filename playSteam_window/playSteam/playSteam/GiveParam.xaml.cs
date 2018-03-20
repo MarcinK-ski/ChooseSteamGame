@@ -41,12 +41,6 @@ namespace playSteam
             EditableApiKey = true;
         }
         
-        public string getCustomID()
-        {
-            string customId = cidtextbox.Text;
-            cidtextbox.Text = "";
-            return customId;
-        }
 
         public void fillParamsGaps()
         {
@@ -62,7 +56,11 @@ namespace playSteam
 
         private void saveparamsbutton_Click(object sender, RoutedEventArgs e)
         {
-            Helper.xSettingsSave(uidtextbox.Text, apikeytextbox.Text);
+            if(wantm8.IsChecked == true)
+                Helper.xSettingsSave(uidtextbox.Text, apikeytextbox.Text, m8uidtextbox.Text);
+            else
+                Helper.xSettingsSave(uidtextbox.Text, apikeytextbox.Text);
+
             this.Hide();
         }
 
@@ -75,6 +73,12 @@ namespace playSteam
         {
             e.Cancel = !HideWindow;
             this.Hide();
+        }
+        
+
+        private void CheckBox_Click(object sender, RoutedEventArgs e)
+        {
+            m8uidtextbox.IsEnabled = m8uidtextbox.IsEnabled ? false : true;
         }
     }
 }

@@ -40,10 +40,11 @@ namespace playSteam
         /*
          * save last UID and APIKey to XML
          */
-        public static bool xSettingsSave(string uid, string apiKey, string url = DEFAULT_LAST_SETTINGS_XML)
+        public static bool xSettingsSave(string uid, string apiKey, string m8uid = "", string url = DEFAULT_LAST_SETTINGS_XML)
         {
-            XElement settingsFile = new XElement("settings", 
-                                                    new XElement("uid", uid), 
+            XElement settingsFile = new XElement("settings",
+                                                    new XElement("uid", uid),
+                                                    new XElement("m8uid", m8uid),
                                                     new XElement("api", apiKey));
 
 

@@ -14,6 +14,7 @@ namespace playSteam
         protected readonly string _apiKey;
         protected const string API_URL = "http://api.steampowered.com/";
         public string UserID { get; set; }
+        public string M8UID { get; set; } = "";
         protected string settingsUri;
 
         public Steam() : this(DEFAULT_UID, DEFAULT_API_KEY)
@@ -30,8 +31,9 @@ namespace playSteam
         }
 
 
-        public bool? generateUID(string customID)
+        public bool? generateUID(bool isM8 = false)
         {
+            string customID = isM8 ? this.M8UID : this.UserID;
             if (customID == "")
                 return null;
             string url = $"{API_URL}ISteamUser/ResolveVanityURL/v0001/?key={this._apiKey}&vanityurl={customID}&format=xml";
@@ -42,18 +44,28 @@ namespace playSteam
             if (xel.Element("success")?.Value != "1")
                 return false;
 
-            this.UserID = xel.Element("steamid").Value;
-            Helper.xSettingsSave(this.UserID, this._apiKey, this.settingsUri);
+            if(isM8)
+                this.M8UID = xel.Element("steamid").Value;
+            else
+                this.UserID = xel.Element("steamid").Value;
+            
+
+            Helper.xSettingsSave(this.UserID, this._apiKey, this.UserID, this.settingsUri);
             return true;
         }
 
         /*
          * Get XElement's array with user info
          */
-        protected XElement getMyUserInfo(string uid = null)
+        protected XElement getMyUserInfo(string uid = null, bool m8 = false)
         {
+            if (m8 && uid == "")
+                return null;
+
+
             if (uid == null || uid == "")
                 uid = this.UserID;
+            
 
             string url = $"{API_URL}ISteamUser/GetPlayerSummaries/v0002/?key={this._apiKey}&steamids={uid}&format=xml";
             XElement xelement = Helper.xRead(url);

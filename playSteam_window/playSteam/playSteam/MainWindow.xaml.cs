@@ -18,19 +18,41 @@ namespace playSteam
 
             steam = new SteamWpfUi(Helper.xReadSettingVal("uid"), Helper.xReadSettingVal("api"));
             loadData();
+            loadData(true);
         }
 
         /*
-         * Load random game title and user data
+         * Load user data
          */
-        private void loadData()
+        private void loadData(bool isSecondPlayer = false)
         {
-            bool? isCustomID = steam.generateUID(param.getCustomID());
+            bool? isCustomID = steam.generateUID(isSecondPlayer);
+            string forWhom = isSecondPlayer ? "(for m8)" : "(for you)";
             if (isCustomID == false)
-                MessageBox.Show("Given invalid User Custom ID, i'll use last UID.", "ERROR!", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Given invalid User Custom ID, i'll use it as UID." + forWhom, "INFO!", MessageBoxButton.OK, MessageBoxImage.Information);
 
-            steam.showUserInfo(nicklabel, namelabel, fromlabel, avatar);
-            steam.showGameTitle(choosedGame);
+            if (isSecondPlayer)
+            {
+                steam.showUserInfo(nicklabel_m8, namelabel_m8, fromlabel_m8, avatar_m8, steam.M8UID, true);
+
+                if ((string)fromlabel_m8.Content == "")
+                    countryheader_m8.Content = "";
+            }
+            else
+                steam.showUserInfo(nicklabel, namelabel, fromlabel, avatar);
+        }
+
+        /*
+         * Load random game title 
+         */
+        private void selectGame(bool isTwoPlayers = false)
+        {
+            if (!isTwoPlayers)
+                steam.showGameTitle(choosedGame);
+            else
+            {
+                //compare games, and randomize one
+            }
         }
 
         /* Close hidden GiveParam window */

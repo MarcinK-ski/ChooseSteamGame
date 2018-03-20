@@ -17,11 +17,20 @@ namespace playSteam
         }
 
         /* Fill content by user info */
-        public void showUserInfo(Label nick, Label name, Label country, Image avatar)
+        public void showUserInfo(Label nick, Label name, Label country, Image avatar, string uid = null, bool m8 = false)
         {
-            XElement userInfo = this.getMyUserInfo();
+            XElement userInfo = this.getMyUserInfo(uid, m8);
             if (userInfo == null)
             {
+                if (m8 && uid == "")
+                {
+                    nick.Content = "NO MATE CHOOSEN";
+                    name.Content = "";
+                    country.Content = "";
+
+                    return;
+                }
+
                 if(Helper.isFileEx())
                 {
                     MessageBoxResult error = MessageBox.Show("Problem with APIKey or UserID. Please check it.", "ERROR!", MessageBoxButton.OK, MessageBoxImage.Error);
