@@ -48,6 +48,8 @@ namespace playSteam
 
             apikeytextbox.Text = Helper.xReadSettingVal("api");
 
+            m8uidtextbox.Text = Helper.xReadSettingVal("m8uid");
+
             if (apikeytextbox.Text == "")
                 EditableApiKey = true;
             else

@@ -16,30 +16,37 @@ namespace playSteam
 
             InitializeComponent();
 
-            steam = new SteamWpfUi(Helper.xReadSettingVal("uid"), Helper.xReadSettingVal("api"));
+            steam = new SteamWpfUi(Helper.xReadSettingVal("uid"), Helper.xReadSettingVal("api"), Helper.xReadSettingVal("m8uid"));
             loadData();
-            loadData(true);
         }
 
         /*
          * Load user data
          */
-        private void loadData(bool isSecondPlayer = false)
+        private void loadData()
         {
-            bool? isCustomID = steam.generateUID(isSecondPlayer);
-            string forWhom = isSecondPlayer ? "(for m8)" : "(for you)";
+            bool showNonCUIDinfo = (bool) param.nonCUIDinfo.IsChecked;
+
+            bool? isCustomID = steam.generateUID();
             if (isCustomID == false)
-                MessageBox.Show("Given invalid User Custom ID, i'll use it as UID." + forWhom, "INFO!", MessageBoxButton.OK, MessageBoxImage.Information);
+                if(showNonCUIDinfo)    
+                MessageBox.Show("Given invalid User Custom ID, i'll use it as UID. (for you)", "INFO!", MessageBoxButton.OK, MessageBoxImage.Information);
 
-            if (isSecondPlayer)
-            {
-                steam.showUserInfo(nicklabel_m8, namelabel_m8, fromlabel_m8, avatar_m8, steam.M8UID, true);
 
-                if ((string)fromlabel_m8.Content == "")
-                    countryheader_m8.Content = "";
-            }
+            isCustomID = steam.generateUID(true);
+            if (isCustomID == false)
+                if (showNonCUIDinfo) 
+                    MessageBox.Show("Given invalid User Custom ID, i'll use it as UID. (for m8)", "INFO!", MessageBoxButton.OK, MessageBoxImage.Information);
+            
+            steam.showUserInfo(nicklabel, namelabel, fromlabel, avatar);
+
+            
+            steam.showUserInfo(nicklabel_m8, namelabel_m8, fromlabel_m8, avatar_m8, steam.M8UID, true);
+
+            if ((string) fromlabel_m8.Content == "")
+                countryheader_m8.Content = "";
             else
-                steam.showUserInfo(nicklabel, namelabel, fromlabel, avatar);
+                countryheader_m8.Content = "Country code:";
         }
 
         /*
@@ -66,13 +73,16 @@ namespace playSteam
         {
             param.fillParamsGaps();
             param.ShowDialog();
+
             steam.UserID = Helper.xReadSettingVal("uid");
-            loadData();
+            steam.M8UID = param.wantm8.IsChecked == true ? Helper.xReadSettingVal("m8uid") : "";            
+            
+            loadData(); 
         }
 
         private void refresh_Click(object sender, RoutedEventArgs e)
         {
-            loadData();
+            loadData(); 
         }
 
         private void info_Click(object sender, RoutedEventArgs e)

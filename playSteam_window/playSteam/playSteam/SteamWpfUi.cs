@@ -12,21 +12,24 @@ namespace playSteam
         {
         }
 
-        public SteamWpfUi(string uid, string apiKey) : base(uid, apiKey)
+        public SteamWpfUi(string uid, string apiKey, string m8uid) : base(uid, apiKey)
         {
+            this.M8UID = m8uid;
         }
 
         /* Fill content by user info */
         public void showUserInfo(Label nick, Label name, Label country, Image avatar, string uid = null, bool m8 = false)
         {
             XElement userInfo = this.getMyUserInfo(uid, m8);
-            if (userInfo == null)
+            bool isRedundand = m8 && this.M8UID == this.UserID;
+            if (userInfo == null || isRedundand)
             {
-                if (m8 && uid == "")
+                if ((m8 && uid == "") || isRedundand)
                 {
                     nick.Content = "NO MATE CHOOSEN";
                     name.Content = "";
                     country.Content = "";
+                    avatar.Source = null;
 
                     return;
                 }
