@@ -8,6 +8,10 @@ namespace playSteam
 {
     class SteamWpfUi : Steam
     {
+
+        public bool wasLastRedundand = false;
+
+#region constructors
         public SteamWpfUi() : base()    //Default key and apiKey
         {
         }
@@ -16,16 +20,26 @@ namespace playSteam
         {
             this.M8UID = m8uid;
         }
+#endregion
 
-        /* Fill content by user info */
+
+#region methods
+
+        /* 
+         * Fill content by user info 
+         */
         public void showUserInfo(Label nick, Label name, Label country, Image avatar, string uid = null, bool m8 = false)
         {
             XElement userInfo = this.getMyUserInfo(uid, m8);
-            bool isRedundand = m8 && this.M8UID == this.UserID;
+
+            bool isRedundand = m8 && this.M8UID == this.UserID;     //In case "mate mode"; be shure, that given MateUID is different to UID
+            this.wasLastRedundand = isRedundand;
+
             if (userInfo == null || isRedundand)
             {
                 if ((m8 && uid == "") || isRedundand)
                 {
+                    /*** Default values if theres no mate given ***/
                     nick.Content = "NO MATE CHOOSEN";
                     name.Content = "";
                     country.Content = "";
@@ -48,7 +62,7 @@ namespace playSteam
 
             nick.Content = userInfo.Element("personaname")?.Value;
 
-            string realname = userInfo.Element("realname")?.Value;
+            string realname = userInfo.Element("realname")?.Value;  //REALNAME IS NOT ALWAYS USED!!!
             if (realname != "" && realname != null)
                 name.Content = $"(vel {realname})";
             else
@@ -63,14 +77,18 @@ namespace playSteam
             avatar.Source = new BitmapImage(new Uri(userInfo.Element("avatarfull")?.Value));
         }
 
-        /* Show random game title */
+        /* 
+         * Show random game title for "single mode"
+         */
         public void showGameTitle(Label game)
         {
             string choosedGame = this.rollGames();
+
             if (choosedGame != null)
                 game.Content = choosedGame;
             else
                 game.Content = "There's no game in Yours library, you poor guy...";
         }
+#endregion
     }
 }

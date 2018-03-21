@@ -1,5 +1,6 @@
 ﻿- Popracować nad layoutem (może więcej informacji o userze obok foto, by wypełnić lukę?)
 - Możliwość ustawiania lokalizacji pliku XML (not important)
 - To nie jest apka, gdzie async jest niezbędny, ale można o nim później pomysleć.
-- !MOŻLIWOSĆ PORÓWNANIA SWOICH BIBLIOTEK ZE ZNAJOMYM I WYBRANIU WSPÓLNEJ GRY, LUB WSPÓLNEJ GRY DZAŁAJACEJ NA MULTI (checkbox)!
-- Ujednolicenie wpisywania UID oraz CustomD (w jednym input text) - podczas niego będzie się pojawiać info, że użyty CID jest niedziałający i nastąpi próba użycia go jako UID (user decyduje, czy ma się to pojawiać)
+- !MOŻLIWOSĆ PORÓWNANIA SWOICH BIBLIOTEK ZE ZNAJOMYM I WYBRANIU WSPÓLNEJ GRY, LUB WSPÓLNEJ GRY DZAŁAJACEJ NA MULTI!
+- BUG FIX => Pokazywanie ostatnio używany MateUID
+- Lokalizacja XML z settingsami ustawiona w App.config

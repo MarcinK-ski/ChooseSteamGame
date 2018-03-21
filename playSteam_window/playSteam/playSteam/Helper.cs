@@ -6,7 +6,7 @@ namespace playSteam
 {
     class Helper
     {
-        public const string DEFAULT_LAST_SETTINGS_XML = "lastSettings.xml";
+        public const string DEFAULT_LAST_SETTINGS_XML = "lastSettings.xml"; //Name and where XML config with settings, should be saved
 
         /*
          * load XML
@@ -43,9 +43,9 @@ namespace playSteam
         public static bool xSettingsSave(string uid, string apiKey, string m8uid = "", string url = DEFAULT_LAST_SETTINGS_XML)
         {
             XElement settingsFile = new XElement("settings",
-                                                    new XElement("uid", uid),
-                                                    new XElement("m8uid", m8uid),
-                                                    new XElement("api", apiKey));
+                                                    new XElement("uid", uid),       //UserID
+                                                    new XElement("m8uid", m8uid),   //Mate UserUD
+                                                    new XElement("api", apiKey));   //API Key
 
 
             settingsFile.Save(url);

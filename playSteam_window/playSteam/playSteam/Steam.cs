@@ -8,14 +8,33 @@ namespace playSteam
 {
     class Steam
     {
+
+#region constForEasierDebuging
+
         const string DEFAULT_UID = "XXXXXXXXXXXXXXXXXXXXXX";
         const string DEFAULT_API_KEY = "XXXXXXXXXXXXXXXXXXXXXX";
 
+#endregion
+
+
+#region properties
+
         protected readonly string _apiKey;
         protected const string API_URL = "http://api.steampowered.com/";
+        protected string settingsUri;
+
+#endregion
+
+
+#region get/set
+
         public string UserID { get; set; }
         public string M8UID { get; set; } = "";
-        protected string settingsUri;
+
+#endregion
+
+
+#region constructors
 
         public Steam() : this(DEFAULT_UID, DEFAULT_API_KEY)
         {
@@ -30,27 +49,39 @@ namespace playSteam
             this.settingsUri = settingsUri;
         }
 
+#endregion
 
+
+#region methods
+
+        /*
+         * Generate UID from CustomUID
+         */
         public bool? generateUID(bool isM8 = false)
         {
-            string customID = isM8 ? this.M8UID : this.UserID;
+            string customID = isM8 ? this.M8UID : this.UserID;  //Using function to generate UID for mate or user
+
             if (customID == "")
                 return null;
+
             string url = $"{API_URL}ISteamUser/ResolveVanityURL/v0001/?key={this._apiKey}&vanityurl={customID}&format=xml";
             XElement xel = Helper.xRead(url);
             if (xel == null)
                 return null;
 
-            if (xel.Element("success")?.Value != "1")
+            if (xel.Element("success")?.Value != "1")   //Correct result, should has "success" set to "1", other states are errors
                 return false;
 
-            if(isM8)
-                this.M8UID = xel.Element("steamid").Value;
-            else
-                this.UserID = xel.Element("steamid").Value;
-            
+            string resultAsID = xel.Element("steamid").Value;
 
-            Helper.xSettingsSave(this.UserID, this._apiKey, this.UserID, this.settingsUri);
+            if (isM8)
+                this.M8UID = resultAsID;
+            else
+                this.UserID = resultAsID;
+
+
+            Helper.xSettingsSave(this.UserID, this._apiKey, this.M8UID, this.settingsUri);
+
             return true;
         }
 
@@ -59,11 +90,11 @@ namespace playSteam
          */
         protected XElement getMyUserInfo(string uid = null, bool m8 = false)
         {
-            if (m8 && uid == "")
+            if (m8 && (uid == "" || uid == null))
                 return null;
 
 
-            if (uid == null || uid == "")
+            if (uid == null || uid == "")   //if given UID is empty, we should use last known UID
                 uid = this.UserID;
             
 
@@ -72,7 +103,7 @@ namespace playSteam
             if (xelement == null)
                 return null;
 
-            XElement[] usr = xelement.Elements("players")?.Elements("player")?.ToArray();
+            XElement[] usr = xelement.Elements("players")?.Elements("player")?.ToArray();   //Get array with User info
             if (usr.Length < 1)
                 return null;
             
@@ -81,7 +112,7 @@ namespace playSteam
         }
 
         /*
-         * Get basic user info as string
+         * Get basic user info as string (method created for console version)
          */
         public string userInfoToString()
         {
@@ -97,6 +128,9 @@ namespace playSteam
 
             return userInfo.ToString();
         }
+
+
+    #region oneUserGames
 
         /*
          * Get user's games
@@ -142,5 +176,10 @@ namespace playSteam
 
             return games[choosedGame];
         }
+
+    #endregion
+
+#endregion
+
     }
 }

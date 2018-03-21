@@ -7,12 +7,19 @@ namespace playSteam
     /// </summary>
     public partial class MainWindow : Window
     {
-        GiveParam param = new GiveParam();
-        SteamWpfUi steam;
+
+#region globalsy
+
+        GiveParam param = new GiveParam();  //Window with settings
+        SteamWpfUi steam;   //Steam class with some features for GUI
+
+#endregion
+
+#region constr
 
         public MainWindow()
         {
-            param.ShowDialog();
+            param.ShowDialog();     //First of all we have to give parameters or accept oldone
 
             InitializeComponent();
 
@@ -20,33 +27,49 @@ namespace playSteam
             loadData();
         }
 
+#endregion
+
+
+#region methods
+
         /*
-         * Load user data
+         * Load user data (no matter is mate too or no)
          */
         private void loadData()
         {
-            bool showNonCUIDinfo = (bool) param.nonCUIDinfo.IsChecked;
+            bool showNonCUIDinfo = (bool) param.nonCUIDinfo.IsChecked;      //Checkbox from settings, which disable/enable info, that CustomUID isn't correct, so app will try use it as normal UID
+
+        #region User
 
             bool? isCustomID = steam.generateUID();
             if (isCustomID == false)
                 if(showNonCUIDinfo)    
                 MessageBox.Show("Given invalid User Custom ID, i'll use it as UID. (for you)", "INFO!", MessageBoxButton.OK, MessageBoxImage.Information);
 
+            steam.showUserInfo(nicklabel, namelabel, fromlabel, avatar);
+
+        #endregion
+
+
+        #region Mate
 
             isCustomID = steam.generateUID(true);
             if (isCustomID == false)
                 if (showNonCUIDinfo) 
                     MessageBox.Show("Given invalid User Custom ID, i'll use it as UID. (for m8)", "INFO!", MessageBoxButton.OK, MessageBoxImage.Information);
             
-            steam.showUserInfo(nicklabel, namelabel, fromlabel, avatar);
-
-            
             steam.showUserInfo(nicklabel_m8, namelabel_m8, fromlabel_m8, avatar_m8, steam.M8UID, true);
 
-            if ((string) fromlabel_m8.Content == "")
+            if ((string) fromlabel_m8.Content == "")    //Clear countryLabel if country is empty
                 countryheader_m8.Content = "";
             else
                 countryheader_m8.Content = "Country code:";
+
+        #endregion
+
+
+            bool isTwoPlayers = !steam.wasLastRedundand && steam.M8UID != "" && (bool)param.wantm8.IsChecked;   //Checking to decide: "Should I choose game for two players or one?"
+            selectGame(isTwoPlayers);
         }
 
         /*
@@ -55,20 +78,33 @@ namespace playSteam
         private void selectGame(bool isTwoPlayers = false)
         {
             if (!isTwoPlayers)
+            {
+                choosedGame.Content = "No info";
                 steam.showGameTitle(choosedGame);
+            }
             else
             {
+                choosedGame.Content = "No info. For two players, not implemented yet.";
                 //compare games, and randomize one
             }
         }
 
-        /* Close hidden GiveParam window */
+#endregion
+
+#region events
+
+        /* 
+         * Close hidden GiveParam window 
+         */
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             param.HideWindow = true;
             param.Close();
         }
 
+        /*
+         * Open settings window
+         */
         private void settings_Click(object sender, RoutedEventArgs e)
         {
             param.fillParamsGaps();
@@ -80,11 +116,17 @@ namespace playSteam
             loadData(); 
         }
 
+        /*
+         * Refresh loaded data
+         */
         private void refresh_Click(object sender, RoutedEventArgs e)
         {
             loadData(); 
         }
 
+        /*
+         * About app
+         */
         private void info_Click(object sender, RoutedEventArgs e)
         {
             string about = "This (unfinished for now) app was created for people like me, who has great steam library and " +
@@ -95,5 +137,8 @@ namespace playSteam
 
             MessageBox.Show(about, "About app", MessageBoxButton.OK, MessageBoxImage.Information);
         }
+
+#endregion
+
     }
 }
