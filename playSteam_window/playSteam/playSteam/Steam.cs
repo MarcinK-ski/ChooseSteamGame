@@ -129,15 +129,18 @@ namespace playSteam
             return userInfo.ToString();
         }
 
-
-    #region oneUserGames
-
         /*
-         * Get user's games
+         * Get user's or mate's XElement's array 
          */
-        private List<string> getGames()
+        protected XElement[] getUserGameXArray(bool forUser = true)
         {
-            string url = $"{API_URL}IPlayerService/GetOwnedGames/v0001/?key={this._apiKey}&steamid={this.UserID}&format=xml&include_appinfo=1";
+            string forWhomID;
+            if (forUser || this.M8UID == "")
+                forWhomID = this.UserID;
+            else
+                forWhomID = this.M8UID;
+
+            string url = $"{API_URL}IPlayerService/GetOwnedGames/v0001/?key={this._apiKey}&steamid={forWhomID}&format=xml&include_appinfo=1";
             XElement xelement = Helper.xRead(url);
             if (xelement == null)
                 return null;
@@ -145,6 +148,18 @@ namespace playSteam
             XElement[] allGames = xelement.Elements("games")?.Elements("message")?.ToArray();
             if (allGames == null)
                 return null;
+
+            return allGames;
+        }
+
+    #region oneUserGames
+
+        /*
+         * Get user's games
+         */
+        protected List<string> getGames()
+        {
+            XElement[] allGames = getUserGameXArray();
 
             List<string> games = new List<string>(allGames.Count());   //List with game titles
 

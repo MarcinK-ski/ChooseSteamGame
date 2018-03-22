@@ -3,6 +3,8 @@ using System.Xml.Linq;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using System.Windows;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace playSteam
 {
@@ -89,6 +91,85 @@ namespace playSteam
             else
                 game.Content = "There's no game in Yours library, you poor guy...";
         }
+
+
+    #region twoUsersGames
+
+
+        /*
+         * Get your and mate common games list
+         */
+        protected List<string> getCommonGames()
+         {
+
+        #region user
+
+            XElement[] allUserGames = getUserGameXArray();
+
+            HashSet<double> playerGames = new HashSet<double>();
+            
+            /* Saving User's game IDs  */
+            for (int i = 0; i < allUserGames.Count(); i++)
+            {
+                string xel = allUserGames[i].Element("appid")?.Value; //Get only game ID from XML
+                if (xel != null)
+                {
+                    double res;
+                    double.TryParse(xel, out res);
+
+                    playerGames.Add(res);
+                }
+            }
+
+        #endregion
+
+
+        #region mate
+
+            XElement[] allMateGames = getUserGameXArray(false);
+
+            HashSet<double> commonGIDs = new HashSet<double>();
+
+            for (int i = 0; i < allMateGames.Count(); i++)
+            {
+                string xel = allUserGames[i].Element("appid")?.Value; //Get only game ID from XML
+                if (xel != null)
+                {
+                    double res;
+                    double.TryParse(xel, out res);
+
+                    if(playerGames.Contains(res))   //If user has this same game, which is in mate library
+                    {
+                        commonGIDs.Add(res);
+                    }
+                }
+
+            }
+
+        #endregion
+
+
+            List<string> commonTitles = filterMulti(commonGIDs);
+
+            //check returned data?
+
+            return commonTitles;
+
+        }
+
+        /*
+         * Filter only coop games ( return titles )
+         */
+         protected List<string> filterMulti(HashSet<double> commonGames)
+        {
+            //use LINQ TO JSON, because there's no extended info in XML :( 
+
+            return null;
+        }
+
+    #endregion
+
 #endregion
+
     }
 }
