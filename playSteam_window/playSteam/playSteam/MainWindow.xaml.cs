@@ -77,15 +77,15 @@ namespace playSteam
          */
         private void selectGame(bool isTwoPlayers = false)
         {
+            choosedGame.Content = "No info";
+
             if (!isTwoPlayers)
             {
-                choosedGame.Content = "No info";
                 steam.showGameTitle(choosedGame);
             }
             else
             {
-                choosedGame.Content = "No info. For two players, not implemented yet.";
-                //compare games, and randomize one
+                steam.showGameTitle(choosedGame, steam.getCommonGames());
             }
         }
 

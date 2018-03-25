@@ -5,6 +5,11 @@ using System.Windows.Media.Imaging;
 using System.Windows;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.IO;
+using Newtonsoft.Json.Linq;
+using System.Diagnostics;
+using Newtonsoft.Json;
 
 namespace playSteam
 {
@@ -80,16 +85,21 @@ namespace playSteam
         }
 
         /* 
-         * Show random game title for "single mode"
+         * Show random game title for "single/multi mode"
          */
-        public void showGameTitle(Label game)
+        public void showGameTitle(Label gameLabel, List<string> games = null)
         {
-            string choosedGame = this.rollGames();
+            string choosedGame = this.rollGames(games);
 
             if (choosedGame != null)
-                game.Content = choosedGame;
+                gameLabel.Content = choosedGame;
             else
-                game.Content = "There's no game in Yours library, you poor guy...";
+            {
+                if(games == null)
+                    gameLabel.Content = "There's no game in Yours library, you poor guy...";
+                else
+                    gameLabel.Content = "You haven't common games, you poor guys...";
+            }
         }
 
 
@@ -99,8 +109,8 @@ namespace playSteam
         /*
          * Get your and mate common games list
          */
-        protected List<string> getCommonGames()
-         {
+        public List<string> getCommonGames()
+        {
 
         #region user
 
@@ -117,7 +127,7 @@ namespace playSteam
                     double res;
                     double.TryParse(xel, out res);
 
-                    playerGames.Add(res);
+                    playerGames.Add(res);    //Add ID to users Set
                 }
             }
 
@@ -132,7 +142,7 @@ namespace playSteam
 
             for (int i = 0; i < allMateGames.Count(); i++)
             {
-                string xel = allUserGames[i].Element("appid")?.Value; //Get only game ID from XML
+                string xel = allMateGames[i].Element("appid")?.Value; //Get only game ID from XML
                 if (xel != null)
                 {
                     double res;
@@ -140,21 +150,16 @@ namespace playSteam
 
                     if(playerGames.Contains(res))   //If user has this same game, which is in mate library
                     {
-                        commonGIDs.Add(res);
+                        commonGIDs.Add(res);    //Add ID to common Set
+                        //Trace.WriteLine(res + " --> " + allMateGames[i].Element("name")?.Value);
                     }
                 }
 
             }
 
-        #endregion
+         #endregion
 
-
-            List<string> commonTitles = filterMulti(commonGIDs);
-
-            //check returned data?
-
-            return commonTitles;
-
+            return filterMulti(commonGIDs);
         }
 
         /*
@@ -162,7 +167,39 @@ namespace playSteam
          */
          protected List<string> filterMulti(HashSet<double> commonGames)
         {
-            //use LINQ TO JSON, because there's no extended info in XML :( 
+            /** ID (int) => success & data (only if success==true) => categories => array (0 - n) => id (1 == multiplayer) **/
+
+            WebClient wc = new WebClient();
+
+            List<string> commonMultiGames = new List<string>();
+
+            foreach (double gameID in commonGames)
+            {
+                string uri = $"http://store.steampowered.com/api/appdetails?appids={gameID}";   
+                
+                string json = wc.DownloadString(uri);       // Download json, by game ID
+
+                var jsonResult = JToken.Parse(json)[gameID.ToString()];
+
+                bool isSuccessfuly = jsonResult["success"].ToObject<bool>();
+                if (!isSuccessfuly)
+                    continue;                   //skip if ID is wrong or there's no game page (ex. like Metro 2033)
+
+                var categories = jsonResult["data"]["categories"];    
+
+                foreach (var item in categories)        //Category should be as "multiplayer" (id: 1)
+                {
+                    byte catId = item["id"].ToObject<byte>();
+                    string catName = item["description"].ToObject<string>();
+                    Trace.WriteLine(catId + "   -   " + catName);
+
+                    if(catId == 1)
+                        commonMultiGames.Add(jsonResult["data"]["name"].ToObject<string>());
+                }
+            }
+
+            if (commonMultiGames.Count > 0)
+                return commonMultiGames;
 
             return null;
         }

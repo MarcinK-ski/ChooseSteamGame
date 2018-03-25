@@ -10,8 +10,8 @@
         <Image x:Name="avatar" Height="182" Margin="13,10,0,0" VerticalAlignment="Top" OpacityMask="Black" HorizontalAlignment="Left" Width="186"/>
         <Label x:Name="nicklabel" Content="no data" HorizontalAlignment="Left" Margin="217,32,0,0" VerticalAlignment="Top" Height="37" Width="540" FontFamily="Courier New" FontSize="24" FontWeight="Bold"/>
         <Label x:Name="namelabel" Content="vel" HorizontalAlignment="Left" Margin="217,74,0,0" VerticalAlignment="Top" FontSize="16" FontFamily="Courier New" FontStyle="Italic" Width="398"/>
-        <Label x:Name="header2" Content="Choosed game name:" HorizontalAlignment="Left" Margin="10,295,0,0" VerticalAlignment="Top" Width="236" FontSize="20" FontFamily="Courier New" FontStyle="Italic"/>
-        <Label x:Name="choosedGame" Content="no data" HorizontalAlignment="Left" Margin="33,333,0,0" VerticalAlignment="Top" FontWeight="Bold" FontSize="24" FontFamily="Courier New" Width="772" Height="40"/>
+        <Label x:Name="header2" Content="Choosed game name:" HorizontalAlignment="Left" Margin="10,342,0,0" VerticalAlignment="Top" Width="236" FontSize="20" FontFamily="Courier New" FontStyle="Italic"/>
+        <Label x:Name="choosedGame" Content="no data" HorizontalAlignment="Left" Margin="258,339,0,0" VerticalAlignment="Top" FontWeight="Bold" FontSize="24" FontFamily="Courier New" Width="772" Height="40"/>
         <Label x:Name="fromlabel" Content="-" HorizontalAlignment="Left" Margin="388,109,0,0" VerticalAlignment="Top" Height="23" Width="181" FontFamily="Courier New" FontWeight="Bold" FontStyle="Italic" FontSize="16"/>
         <Label x:Name="countryheader" Content="Country code:" HorizontalAlignment="Left" Margin="217,107,0,0" VerticalAlignment="Top" Width="157" Height="29" RenderTransformOrigin="0.492,0.563" FontSize="18" FontFamily="Courier New"/>
         <Menu HorizontalAlignment="Left" Height="40" Margin="0,393,0,-2" VerticalAlignment="Top" Width="1040">

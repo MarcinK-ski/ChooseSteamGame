@@ -179,9 +179,11 @@ namespace playSteam
         /*
          * Choose random game
          */
-        public string rollGames()
+        public string rollGames(List<string> games = null)
         {
-            List<string> games = getGames();
+            if (games == null)
+                games = getGames();
+
             if (games == null)
                 return null;
             int countGames = games.Count;
