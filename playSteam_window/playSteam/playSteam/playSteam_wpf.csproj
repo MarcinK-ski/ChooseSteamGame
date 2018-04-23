@@ -60,6 +60,7 @@
     <Compile Include="GiveParam.xaml.cs">
       <DependentUpon>GiveParam.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Serialization.cs" />
     <Compile Include="Steam.cs" />
     <Compile Include="SteamWpfUi.cs" />
     <Page Include="GiveParam.xaml">
