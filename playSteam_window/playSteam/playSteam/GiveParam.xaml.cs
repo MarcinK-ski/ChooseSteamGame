@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Windows;
+using Kalikowo;
 
 namespace playSteam
 {
@@ -8,6 +9,8 @@ namespace playSteam
     /// </summary>
     public partial class GiveParam : Window
     {
+
+        public SteamSettings appSettings;
 
 #region get/set
         public bool HideWindow { get; set; } = false;   //Hide window after click close button or nope?
@@ -26,7 +29,21 @@ namespace playSteam
         public GiveParam()
         {
             InitializeComponent();
-            fillParamsGaps();
+
+            /*
+            appSettings.ApiKey = "API";
+            appSettings.StemId = "SID";
+            appSettings.CurrentMateId.MateId = "MID";
+            appSettings.CurrentMateId.MateFriendlyName = "FriendlyMateName";
+            Serialization.Serialize(appSettings);
+            */
+
+            appSettings = Serialization.Deserialize() as SteamSettings;
+            if (appSettings != null)
+                fillParamsGaps();
+            else
+                appSettings = new SteamSettings();
+
             EditableApiKey = true;      //API key field should be editable only at app start
         }
 
@@ -40,9 +57,10 @@ namespace playSteam
          */
         public void fillParamsGaps()
         {
-            uidtextbox.Text = Helper.xReadSettingVal("uid");
-            apikeytextbox.Text = Helper.xReadSettingVal("api");
-            m8uidtextbox.Text = Helper.xReadSettingVal("m8uid");
+            uidtextbox.Text = appSettings.StemId;
+            apikeytextbox.Text = appSettings.ApiKey;
+            m8uidtextbox.Text = appSettings.CurrentMateId.MateId;
+            m8textbox.Text = appSettings.CurrentMateId.MateFriendlyName;
 
             if (apikeytextbox.Text == "")   //Set API Key field editable only if is empty
                 EditableApiKey = true;
@@ -58,10 +76,14 @@ namespace playSteam
          */
         private void saveparamsbutton_Click(object sender, RoutedEventArgs e)
         {
-            if(wantm8.IsChecked == true)
-                Helper.xSettingsSave(uidtextbox.Text, apikeytextbox.Text, m8uidtextbox.Text);
-            else
-                Helper.xSettingsSave(uidtextbox.Text, apikeytextbox.Text);
+
+            appSettings.StemId = uidtextbox.Text;
+            appSettings.ApiKey = apikeytextbox.Text;
+            appSettings.CurrentMateId.MateId = m8uidtextbox.Text;
+            appSettings.CurrentMateId.MateFriendlyName = m8textbox.Text;
+            //TODO: Dodawanie osob do listy!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+            Serialization.Serialize(appSettings);
 
             this.Hide();
         }

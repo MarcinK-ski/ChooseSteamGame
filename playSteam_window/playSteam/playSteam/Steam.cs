@@ -21,7 +21,7 @@ namespace playSteam
 
         protected readonly string _apiKey;
         protected const string API_URL = "http://api.steampowered.com/";
-        protected string settingsUri;
+        protected SteamSettings _appSettings;
 
 #endregion
 
@@ -35,18 +35,14 @@ namespace playSteam
 
 
 #region constructors
-
-        public Steam() : this(DEFAULT_UID, DEFAULT_API_KEY)
-        {
-        }
-
-        public Steam(string uid, string apiKey, string settingsUri = Helper.DEFAULT_LAST_SETTINGS_XML) 
+        
+        public Steam(ref SteamSettings appSettings, string uid, string apiKey)
         {
             this.UserID = !string.IsNullOrEmpty(uid) ? uid : DEFAULT_UID;
 
             this._apiKey = !string.IsNullOrEmpty(apiKey) ? apiKey : DEFAULT_API_KEY;
 
-            this.settingsUri = settingsUri;
+            this._appSettings = appSettings;
         }
 
 #endregion
@@ -80,7 +76,7 @@ namespace playSteam
                 this.UserID = resultAsID;
 
 
-            Helper.xSettingsSave(this.UserID, this._apiKey, this.M8UID, this.settingsUri);
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////            Helper.xSettingsSave(this.UserID, this._apiKey, this.M8UID, this.settingsUri);
 
             return true;
         }

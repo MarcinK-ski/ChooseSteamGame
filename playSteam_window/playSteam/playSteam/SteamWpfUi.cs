@@ -10,6 +10,7 @@ using System.IO;
 using Newtonsoft.Json.Linq;
 using System.Diagnostics;
 using Newtonsoft.Json;
+using Kalikowo;
 
 namespace playSteam
 {
@@ -19,11 +20,8 @@ namespace playSteam
         public bool wasLastRedundand = false;
 
 #region constructors
-        public SteamWpfUi() : base()    //Default key and apiKey
-        {
-        }
 
-        public SteamWpfUi(string uid, string apiKey, string m8uid) : base(uid, apiKey)
+        public SteamWpfUi(ref SteamSettings appSettings, string uid, string apiKey, string m8uid) : base(ref appSettings, uid, apiKey)
         {
             this.M8UID = m8uid;
         }
@@ -39,7 +37,7 @@ namespace playSteam
         {
             XElement userInfo = this.getMyUserInfo(uid, m8);
 
-            bool isRedundand = m8 && this.M8UID == this.UserID;     //In case "mate mode"; be shure, that given MateUID is different to UID
+            bool isRedundand = m8 && this.M8UID == this.UserID;     //In case "mate mode"; be sure, that given MateUID is different to UID
             this.wasLastRedundand = isRedundand;
 
             if (userInfo == null || isRedundand)
@@ -55,14 +53,14 @@ namespace playSteam
                     return;
                 }
 
-                if(Helper.isFileEx())
+                if(Serialization.isFileExists())
                 {
                     MessageBoxResult error = MessageBox.Show("Problem with APIKey or UserID. Please check it.", "ERROR!", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
                 else
                 {
-                    MessageBoxResult error = MessageBox.Show("There's no XML file! Creating emptyone...", "ERROR!", MessageBoxButton.OK, MessageBoxImage.Error);
-                    Helper.xSettingsSave("", "");
+                    MessageBoxResult error = MessageBox.Show("There's no config file! Creating emptyone...", "ERROR!", MessageBoxButton.OK, MessageBoxImage.Error);
+                    Serialization.Serialize(new SteamSettings());
                 }
                 return;
             }

@@ -6,7 +6,8 @@ namespace Kalikowo
 {
     static class Serialization
     {
-        private static string _fileName = "file.bin";
+        private const string DEFAULT_FILE_NAME = "file.bin";
+        public static string _fileName = DEFAULT_FILE_NAME;
         private static FileStream _stream;
 
         public static void Serialize(object objectToSerialize, string customFileName = null)
@@ -40,7 +41,7 @@ namespace Kalikowo
 
             Console.WriteLine("DESERIALIZACJA...");
             var formatter = new BinaryFormatter();
-
+            //TODO: spr czy plik nie jest pusty!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             var res = formatter.Deserialize(_stream);
 
             _stream.Close();
@@ -55,7 +56,7 @@ namespace Kalikowo
 
         }
 
-        private static bool isFileExists(string customFileName)
+        public static bool isFileExists(string customFileName = DEFAULT_FILE_NAME)
         {
             if (File.Exists(customFileName))
                 return true;

@@ -12,6 +12,7 @@ namespace playSteam
 
         GiveParam param = new GiveParam();  //Window with settings
         SteamWpfUi steam;   //Steam class with some features for GUI
+        SteamSettings appSettings;
 
 #endregion
 
@@ -20,10 +21,11 @@ namespace playSteam
         public MainWindow()
         {
             param.ShowDialog();     //First of all we have to give parameters or accept oldone
+            appSettings = param.appSettings;
 
             InitializeComponent();
 
-            steam = new SteamWpfUi(Helper.xReadSettingVal("uid"), Helper.xReadSettingVal("api"), Helper.xReadSettingVal("m8uid"));
+            steam = new SteamWpfUi(ref appSettings, appSettings.StemId, appSettings.ApiKey, appSettings.CurrentMateId.MateId);
             loadData();
         }
 
@@ -52,21 +54,29 @@ namespace playSteam
 
 
         #region Mate
+            if((bool)param.wantm8.IsChecked)
+            {
+                isCustomID = steam.generateUID(true);
+                if (isCustomID == false)
+                    if (showNonCUIDinfo)
+                        MessageBox.Show("Given invalid User Custom ID, i'll use it as UID. (for m8)", "INFO!", MessageBoxButton.OK, MessageBoxImage.Information);
 
-            isCustomID = steam.generateUID(true);
-            if (isCustomID == false)
-                if (showNonCUIDinfo) 
-                    MessageBox.Show("Given invalid User Custom ID, i'll use it as UID. (for m8)", "INFO!", MessageBoxButton.OK, MessageBoxImage.Information);
-            
-            steam.showUserInfo(nicklabel_m8, namelabel_m8, fromlabel_m8, avatar_m8, steam.M8UID, true);
+                steam.showUserInfo(nicklabel_m8, namelabel_m8, fromlabel_m8, avatar_m8, steam.M8UID, true);
 
-            if ((string) fromlabel_m8.Content == "")    //Clear countryLabel if country is empty
-                countryheader_m8.Content = "";
+                if ((string)fromlabel_m8.Content == "")    //Clear countryLabel if country is empty
+                    countryheader_m8.Content = "";
+                else
+                    countryheader_m8.Content = "Country code:";
+            }
             else
-                countryheader_m8.Content = "Country code:";
-
-        #endregion
-
+            {
+                nicklabel_m8.Content = "NO MATE CHOOSEN";
+                namelabel_m8.Content = "";
+                fromlabel_m8.Content = "";
+                countryheader_m8.Content = "";
+                avatar_m8.Source = null;
+            }
+            #endregion
 
             bool isTwoPlayers = !steam.wasLastRedundand && steam.M8UID != "" && (bool)param.wantm8.IsChecked;   //Checking to decide: "Should I choose game for two players or one?"
             selectGame(isTwoPlayers);
@@ -110,8 +120,8 @@ namespace playSteam
             param.fillParamsGaps();
             param.ShowDialog();
 
-            steam.UserID = Helper.xReadSettingVal("uid");
-            steam.M8UID = param.wantm8.IsChecked == true ? Helper.xReadSettingVal("m8uid") : "";            
+            steam.UserID = appSettings.StemId;
+            steam.M8UID = param.wantm8.IsChecked == true ? appSettings.CurrentMateId.MateId : "";            
             
             loadData(); 
         }
@@ -130,7 +140,7 @@ namespace playSteam
         private void info_Click(object sender, RoutedEventArgs e)
         {
             string about = "This (unfinished for now) app was created for people like me, who has great steam library and " +
-                "they don't have idea, what game choose right now. \n\n" +
+                "they don't have idea, which game choose right now. \n\n" +
                 "To use this app, you have to have Steam API Key! (link: http://steamcommunity.com/dev/apikey ) \n\n" +
                 "App creator: Marcin Kalinowski\n" +
                 "Gdansk A.D. 2018";
