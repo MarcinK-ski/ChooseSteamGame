@@ -1,11 +1,11 @@
 ﻿Bugs:
-	- BUG FIX => Pokazywanie ostatnio używany MateUID (nawet jeśli nie użyty)
+	No info
 
 
 Features:
 	- Możliwość sprawdzenia, jakie ma się wspólne gry (nie tylko multi)
 	- Sprawdzanie jakie ma się gry, które dzałają w coop (to jest coś innego niż multi, bo można grać na jednym kompie)
-	- Lokalizacja XML z settingsami ustawiona w App.config
+	- Lokalizacja pliku z settingsami ustawiona w App.config
 
 
 Improvements:
@@ -15,6 +15,6 @@ Improvements:
 
 Not nessesery:
 	- Popracować nad layoutem (może więcej informacji o userze obok foto, by wypełnić lukę?)
-	- Możliwość ustawiania lokalizacji pliku XML (not important)
+	- Możliwość ustawiania lokalizacji pliku z settingsami (not important)
 
 

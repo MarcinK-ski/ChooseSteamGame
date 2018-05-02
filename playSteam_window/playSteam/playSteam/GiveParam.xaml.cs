@@ -45,6 +45,8 @@ namespace playSteam
                 appSettings = new SteamSettings();
 
             EditableApiKey = true;      //API key field should be editable only at app start
+
+            matesList.ItemsSource = appSettings.GetLastMates();
         }
 
 #endregion
@@ -76,17 +78,36 @@ namespace playSteam
          */
         private void saveparamsbutton_Click(object sender, RoutedEventArgs e)
         {
+            if((bool)wantm8.IsChecked)
+            {
+                string myUid = uidtextbox.Text;
+                string apiKey = apikeytextbox.Text;
 
-            appSettings.StemId = uidtextbox.Text;
-            appSettings.ApiKey = apikeytextbox.Text;
-            appSettings.CurrentMateId.MateId = m8uidtextbox.Text;
-            appSettings.CurrentMateId.MateFriendlyName = m8textbox.Text;
-            //TODO: Dodawanie osob do listy!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                if ((bool)mateFromListCB.IsChecked)
+                {
+                    var currentMate = (SteamSettings.Mates)matesList.SelectedItem;
+                    setAppSettingsParams(myUid, apiKey, currentMate.MateId, currentMate.MateFriendlyName);
+                }
+                else
+                {
+                    setAppSettingsParams(myUid, apiKey, m8uidtextbox.Text, m8textbox.Text);
+                    appSettings.AddMate(appSettings.CurrentMateId);
+                }
+            }
 
             Serialization.Serialize(appSettings);
 
             this.Hide();
         }
+
+        private void setAppSettingsParams(string steamIdTxt, string apiKeyTxt, string mateIdTxt, string mateNameTxt)
+        {
+            appSettings.StemId = steamIdTxt;
+            appSettings.ApiKey = apiKeyTxt;
+            appSettings.CurrentMateId.MateId = mateIdTxt;
+            appSettings.CurrentMateId.MateFriendlyName = mateNameTxt;
+        }
+
 
         /*
          * Cancel button
@@ -104,14 +125,48 @@ namespace playSteam
             e.Cancel = !HideWindow;
             this.Hide();
         }
+
         /*
          * Enable/disable mate adding 
          */
 
-        private void CheckBox_Click(object sender, RoutedEventArgs e)
+        private void wantm8_Click(object sender, RoutedEventArgs e)
         {
-            m8uidtextbox.IsEnabled = m8uidtextbox.IsEnabled ? false : true;
+            if((bool)wantm8.IsChecked)
+            {
+                if ((bool)mateFromListCB.IsChecked)
+                {
+                    toggleMatesList(true);
+                    toggleOneMate(false);
+                }
+                else
+                {
+                    toggleMatesList(false);
+                    toggleOneMate(true);
+                }
+            }
+            else
+            {
+                toggleMatesList(false, false);
+                toggleOneMate(false);
+            }
         }
-#endregion
+
+        private void toggleMatesList(bool val, bool checkboxEnable = true)
+        {
+            matesList.IsEnabled = val;
+            mateFromListCB.IsEnabled = checkboxEnable;
+        }
+
+        private void toggleOneMate(bool val)
+        {
+            m8textbox.IsEnabled = val;
+            m8uidtextbox.IsEnabled = val;
+        }
+
+
+
+ #endregion
+        
     }
 }

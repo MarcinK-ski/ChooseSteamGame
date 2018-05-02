@@ -14,6 +14,11 @@ namespace playSteam
         {
             public string MateId;
             public string MateFriendlyName;
+
+            public override string ToString()   //Need to ComboBox
+            {
+                return MateFriendlyName + ": " + MateId;
+            }
         }
 
         public string ApiKey { get; set; } = "";
@@ -21,6 +26,24 @@ namespace playSteam
         public Mates CurrentMateId;
         
 
-        public List<Mates> prevMates = new List<Mates>();
+        private List<Mates> prevMates = new List<Mates>();
+
+        public bool AddMate(Mates currentMate)
+        {
+            foreach(var mate in prevMates)
+            {
+                if (mate.MateId == currentMate.MateId)
+                    return false;
+            }
+
+            prevMates.Add(currentMate);
+
+            return true;
+        }
+
+        public List<Mates> GetLastMates()
+        {
+            return prevMates;
+        }
     }
 }
