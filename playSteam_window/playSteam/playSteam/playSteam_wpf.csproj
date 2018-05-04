@@ -60,11 +60,18 @@
     <Compile Include="GiveParam.xaml.cs">
       <DependentUpon>GiveParam.xaml</DependentUpon>
     </Compile>
+    <Compile Include="LoadingWindow.xaml.cs">
+      <DependentUpon>LoadingWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Serialization.cs" />
     <Compile Include="Steam.cs" />
     <Compile Include="SteamSettings.cs" />
     <Compile Include="SteamWpfUi.cs" />
     <Page Include="GiveParam.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LoadingWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

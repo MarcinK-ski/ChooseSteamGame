@@ -1,4 +1,7 @@
-﻿using System.Windows;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows;
 
 namespace playSteam
 {
@@ -13,6 +16,7 @@ namespace playSteam
         GiveParam param = new GiveParam();  //Window with settings
         SteamWpfUi steam;   //Steam class with some features for GUI
         SteamSettings appSettings;
+        LoadingWindow loading;
 
 #endregion
 
@@ -34,11 +38,29 @@ namespace playSteam
 
 #region methods
 
+        
+        private void showLoadInfo(bool state)
+        {
+            if (state)
+            {
+                loading = new LoadingWindow();
+                loading.Show();
+                MessageBox.Show("Loading data is beggining");
+            }
+            else
+            {
+                loading.Close();
+            }
+            
+        }
+
         /*
          * Load user data (no matter is mate too or no)
          */
         private void loadData()
         {
+            showLoadInfo(true);
+            
             bool showNonCUIDinfo = (bool) param.nonCUIDinfo.IsChecked;      //Checkbox from settings, which disable/enable info, that CustomUID isn't correct, so app will try use it as normal UID
 
         #region User
@@ -80,6 +102,8 @@ namespace playSteam
 
             bool isTwoPlayers = !steam.wasLastRedundand && steam.M8UID != "" && (bool)param.wantm8.IsChecked;   //Checking to decide: "Should I choose game for two players or one?"
             selectGame(isTwoPlayers);
+
+            //showLoadInfo(false);
         }
 
         /*
